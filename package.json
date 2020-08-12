@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chrome": "0.0.122",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "scripts": {
+    "watch": "webpack --watch --mode production",
+    "build": "webpack --mode production"
+  }
+}
