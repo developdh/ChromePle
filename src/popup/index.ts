@@ -5,6 +5,21 @@
 'use strict';
 import chromep from 'chrome-promise';
 
+import io from 'socket.io-client';
+
+import { socketioAddr } from "./consts";
+ 
+const socket = io(socketioAddr);
+
+socket.on('connect', function(){});
+socket.on('event', function(data: String){});
+socket.on('disconnect', function(){});
+socket.on("pong", (a: string) => {
+  alert("머리가 띵");
+});
+//socket.on("error", () => alert("!"))
+socket.connect();
+
 let changeColor = document.getElementById('changeColor');
 
 chromep.storage.sync.get('color').then((data) => {
@@ -20,7 +35,8 @@ changeColor.onclick = async (element) => {
     {
       code: '(() => { document.body.style.backgroundColor = "' + color + '"; return document })()'
     }
-  );
-  alert(results);
+    );
+  };
+  
+  socket.emit("ping");
   changeColor.innerText = "시발!";
-};

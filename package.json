@@ -2,7 +2,9 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "chrome-promise": "^3.0.5"
+    "@types/socket.io-client": "^1.4.33",
+    "chrome-promise": "^3.0.5",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.122",

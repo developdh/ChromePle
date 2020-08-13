@@ -25,7 +25,7 @@ module.exports = {
     },
     plugins: [
         new EncodingPlugin({
-            encoding: 'UTF-8'
+            encoding: 'utf-8'
         })
     ]
 };
