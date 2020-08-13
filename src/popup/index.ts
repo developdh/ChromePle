@@ -3,19 +3,24 @@
 // found in the LICENSE file.
 
 'use strict';
+import chromep from 'chrome-promise';
 
 let changeColor = document.getElementById('changeColor');
 
-chrome.storage.sync.get('color', function(data) {
+chromep.storage.sync.get('color').then((data) => {
   changeColor.style.backgroundColor = data.color;
   changeColor.setAttribute('value', data.color);
 });
 
-changeColor.onclick = function(element) {
+changeColor.onclick = async (element) => {
   let color = (<HTMLInputElement>element.target).value;
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.executeScript(
-        tabs[0].id,
-        {code: 'document.body.style.backgroundColor = "' + color + '";'});
-  });
+  const tabs = await chromep.tabs.query({ active: true, currentWindow: true });
+  const results = await chromep.tabs.executeScript(
+    tabs[0].id,
+    {
+      code: '(() => { document.body.style.backgroundColor = "' + color + '"; return document })()'
+    }
+  );
+  alert(results);
+  changeColor.innerText = "시발!";
 };
