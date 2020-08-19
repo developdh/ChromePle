@@ -1,1 +1,1 @@
-export const socketioAddr = "http://10.56.215.181" 
+export const socketioAddr = "http://computa.lunuy.com" 
