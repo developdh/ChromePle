@@ -82,13 +82,12 @@ async function initialize(initData : InitData) {
     const divWidth : number = window.innerWidth;
 
     const div = document.createElement("div");
-    div.style.width = divWidth.toString();
-    div.style.height = divHeight.toString();
+    div.style.width = divWidth.toString() + "px";
+    div.style.height = divHeight.toString() + "px";
     div.style.overflow = "hidden";
 
     const canvas = document.createElement("canvas");
     div.appendChild(canvas);
-
     const context = canvas.getContext("2d");
 
     canvas.width = initData.width;
@@ -162,7 +161,7 @@ async function initialize(initData : InitData) {
 
     function out(e : MouseEvent) { drawing = false; }
 
-    document.body.appendChild(canvas);
+    document.body.appendChild(div);
 
 
     // socket.io로 그리기 정보 받아서 canvas에 그리기
