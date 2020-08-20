@@ -1,0 +1,1 @@
+export const socketioAddr = "https://chromeple.lunuy.com/";

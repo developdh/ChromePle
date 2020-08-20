@@ -1,1 +1,0 @@
-export const socketioAddr = "http://computa.lunuy.com" 

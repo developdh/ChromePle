@@ -11,8 +11,13 @@
     </style>
   </head>
   <body>
-    <button id="changeColor">실행</button>
+    <button id="startScript">실행</button>
+    <div id="controller" style="display: none;">
+      색 <input type="color" id="drawColor"><br>
+      굵기 <input type="range" id="drawWidth">
+      투명도 <input type="range" id="drawAlpha" min="0" max="100" value="100">
+      지우개 <input type="button" id="eraserMode" value="ON">
+    </div>
     <script src="./scripts/popup.js"></script>
-    <input type="color">
   </body>
 </html>

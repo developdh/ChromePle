@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         background: './src/background/index.ts',
         options: './src/options/index.ts',
-        popup: './src/popup/index.ts'
+        popup: './src/popup/index.ts',
+        execute: './src/execute/index.ts'
     },
     module: {
         rules: [

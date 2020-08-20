@@ -4,42 +4,113 @@
 
 'use strict';
 import chromep from 'chrome-promise';
+import { ChromePle } from "../types";
 
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 
-import { socketioAddr } from "./consts";
- 
-const socket = io(socketioAddr);
+// import { socketioAddr } from "../consts/consts";
 
-socket.on('connect', function(){});
-socket.on('event', function(data: String){});
-socket.on('disconnect', function(){});
-// socket.on("pongpong", (a: string) => {
-//   alert("머리가 띵");
-// });
-//socket.on("error", () => alert("!"))
-socket.connect();
+// const socket = io(socketioAddr);
 
-let changeColor = document.getElementById('changeColor');
+// socket.on('connect', function(){});
+// socket.on('event', function(data: String){});
+// socket.on('disconnect', function(){});
+// socket.connect();
+
+const startScript = document.getElementById('startScript');
+const drawColor = <HTMLInputElement>document.getElementById("drawColor");
+const drawWidth = <HTMLInputElement>document.getElementById("drawWidth");
+const drawAlpha = <HTMLInputElement>document.getElementById("drawAlpha");
+const eraserMode = <HTMLInputElement>document.getElementById("eraserMode");
+const controller = document.getElementById("controller");
 
 chromep.storage.sync.get('color').then((data) => {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
+  startScript.style.backgroundColor = data.color;
+  startScript.setAttribute('value', data.color);
 });
 
-changeColor.onclick = async (element) => {
-  let color = (<HTMLInputElement>element.target).value;
-  const tab = (await chromep.tabs.query({ active: true, currentWindow: true }))[0];
-  socket.emit(window.location.hostname);
-  changeColor.innerText = "실행중...";
-  await chromep.tabs.setZoom(tab.id, 1);
-  const tab_innerWidth : number = (await chromep.tabs.executeScript(tab.id, { code: "(() => { return innerWidth })()" }))[0];
-  //alert(tab_innerWidth/1920);
-  await chromep.tabs.setZoom(tab_innerWidth/1920);
-  const results = await chromep.tabs.executeScript(
+async function executeScriptCode(tab : chrome.tabs.Tab, code : string) {
+  return (await chromep.tabs.executeScript(
     tab.id,
-    {
-      code: '(() => { document.body.style.backgroundColor = "' + color + '"; return document })()'
-    }
-  );
-};
+    { code }
+  ))[0];
+}
+
+async function isRunning(tab : chrome.tabs.Tab) : Promise<boolean> {
+  // const colorValue = drawColor.value; 
+  // await executeScriptCode(tab, `window.chromePle.brushData.color = ${parseInt(colorValue.substr(1), 16)}`);
+
+  // const widthValue = drawWidth.value; 
+  // await executeScriptCode(tab, `window.chromePle.brushData.width = ${widthValue}`);
+
+  // const alphaValue = parseInt(drawAlpha.value); 
+  // await executeScriptCode(tab, `window.chromePle.brushData.alpha = ${alphaValue / 100}`);
+
+  // const newMode : boolean = await executeScriptCode(tab, `window.chromePle.brushData.eraserMode = !window.chromePle.brushData.eraserMode`);
+  //     eraserMode.value =  newMode ? "OFF" : "ON";
+
+  return await executeScriptCode(tab, `(() => { return !!window.chromePle; })()`);
+}
+
+async function makeController(tab : chrome.tabs.Tab) {
+  controller.style.display = "block";
+    
+  const chromePle : ChromePle = await executeScriptCode(tab, `window.chromePle`);
+
+  drawColor.value = "#"+chromePle.brushData.color.toString(16).padStart(6, "0");
+  drawWidth.value = chromePle.brushData.width.toString();
+  drawAlpha.value = (chromePle.brushData.alpha*100).toString();
+  eraserMode.value = chromePle.brushData.eraserMode ? "OFF" : "ON";
+
+  drawColor.addEventListener("change", async () => {
+    const colorValue = drawColor.value; 
+    await executeScriptCode(tab, `window.chromePle.brushData.color = ${parseInt(colorValue.substr(1), 16)}`);
+  });
+
+  drawWidth.addEventListener("change", async () => {
+    const widthValue = drawWidth.value; 
+    await executeScriptCode(tab, `window.chromePle.brushData.width = ${widthValue}`);
+  });
+
+  drawAlpha.addEventListener("change", async () => {
+    const alphaValue = parseInt(drawAlpha.value); 
+    await executeScriptCode(tab, `window.chromePle.brushData.alpha = ${alphaValue / 100}`);
+  });
+
+  eraserMode.addEventListener("click", async () => {
+    const newMode : boolean = await executeScriptCode(tab, `window.chromePle.brushData.eraserMode = !window.chromePle.brushData.eraserMode`);
+    eraserMode.value =  newMode ? "OFF" : "ON";
+  });
+}
+
+async function main() {
+  const tab = (await chromep.tabs.query({ active: true, currentWindow: true }))[0];
+
+  if(await isRunning(tab)) {
+    await makeController(tab);
+  } else {
+    //alert("??");
+    startScript.addEventListener("click", async () => {
+
+      await chromep.tabs.setZoom(tab.id, 1);
+      const tab_innerWidth : number = (await chromep.tabs.executeScript(tab.id, { code: "(() => { return innerWidth })()" }))[0];
+      await chromep.tabs.setZoom(tab_innerWidth/1920);
+
+      await executeScriptCode(tab, await (await fetch("./scripts/execute.js")).text());
+      await makeController(tab);
+
+      // socket.emit("setUrl", await executeScriptCode(tab, "window.location.hostname"));
+      // socket.once("initCanvas", async (initData : {
+      //   width : number,
+      //   height : number,
+      //   dataURL : string
+      // }) => {
+      //   await executeScriptCode(tab, `window.chromePle = ${JSON.stringify(initData)};`);
+      // });
+    });    
+  }
+}
+
+
+
+main();
