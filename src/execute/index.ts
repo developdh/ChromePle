@@ -77,7 +77,18 @@ async function getImage(imagePath : string) : Promise<HTMLImageElement> {
 }
 
 async function initialize(initData : InitData) {
+
+    const divHeight : number = document.body.scrollHeight;
+    const divWidth : number = window.innerWidth;
+
+    const div = document.createElement("div");
+    div.style.width = divWidth.toString();
+    div.style.height = divHeight.toString();
+    div.style.overflow = "hidden";
+
     const canvas = document.createElement("canvas");
+    div.appendChild(canvas);
+
     const context = canvas.getContext("2d");
 
     canvas.width = initData.width;
