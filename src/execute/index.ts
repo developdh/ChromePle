@@ -79,13 +79,18 @@ async function getImage(imagePath : string) : Promise<HTMLImageElement> {
 async function initialize(initData : InitData) {
 
     const divHeight : number = document.body.scrollHeight;
-    const divWidth : number = window.innerWidth;
+    const divWidth : number = document.body.clientWidth;
 
     const div = document.createElement("div");
     div.style.width = divWidth.toString() + "px";
     div.style.height = divHeight.toString() + "px";
     div.style.overflow = "hidden";
+    div.style.position = "absolute";
+    div.style.top = "0";
+    div.style.left = "0";
 
+    document.body.appendChild(div);
+    
     const canvas = document.createElement("canvas");
     div.appendChild(canvas);
     const context = canvas.getContext("2d");
@@ -191,6 +196,7 @@ async function initialize(initData : InitData) {
         endY,
         radius
     } : DrawData) => {
+        context.strokeStyle = `rgba(0,0,0,1)`;
         context.globalCompositeOperation = "destination-out";
         context.lineWidth = radius;
         context.beginPath();
