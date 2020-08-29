@@ -51,7 +51,6 @@ async function isRunning(tab : chrome.tabs.Tab) : Promise<boolean> {
 
   return await executeScriptCode(tab, `(() => { return !!window.chromePle; })()`);
 }
-
 async function makeController(tab : chrome.tabs.Tab) {
   controller.style.display = "block";
     
