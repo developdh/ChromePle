@@ -60,6 +60,8 @@ async function makeController(tab : chrome.tabs.Tab) {
   drawWidth.value = chromePle.brushData.width.toString();
   drawAlpha.value = (chromePle.brushData.alpha*100).toString();
   eraserMode.value = chromePle.brushData.eraserMode ? "OFF" : "ON";
+  eraserMode.src = chromePle.brushData.eraserMode ? "OFF" : "ON";
+  eraserMode.src = chromePle.brushData.eraserMode ? "./images/on_button.png" : "./images/off_button.png";
 
   drawColor.addEventListener("change", async () => {
     const colorValue = drawColor.value; 
@@ -79,6 +81,7 @@ async function makeController(tab : chrome.tabs.Tab) {
   eraserMode.addEventListener("click", async () => {
     const newMode : boolean = await executeScriptCode(tab, `window.chromePle.brushData.eraserMode = !window.chromePle.brushData.eraserMode`);
     eraserMode.value =  newMode ? "OFF" : "ON";
+    eraserMode.src =  newMode ? "./images/on_button.png" : "./images/off_button.png";
   });
 }
 

@@ -1,22 +1,57 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8">
+  <meta charset="utf-8" />
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@200&display=swap" rel="stylesheet"> 
     <style>
-      button {
-        height: 30px;
-        width: 90px;
+      body {
+        background-color: #2e52a4;
+        color: #fbb020;
+        font-family: 'Work Sans', sans-serif;
+      }
+      #startScript {
+        color: #fbb020;
+      }
+      .eraserDiv{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 120px;
+        height: 1px;
+        background: transparent;
+        cursor: pointer;
+        background: #ffffff;
+      }
+      input[type="range"]:focus {
         outline: none;
       }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 10px;
+        height: 10px;
+        background: #fbb020;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
-    <button id="startScript">실행</button>
-    <div id="controller" style="display: none;">
-      색 <input type="color" id="drawColor"><br>
-      굵기 <input type="range" id="drawWidth">
-      투명도 <input type="range" id="drawAlpha" min="0" max="100" value="100">
-      지우개 <input type="button" id="eraserMode" value="ON">
+    <input type="image" src="images/ON.png" id="startScript" style="border-radius:5px;"/>
+    <div id="controller" style="display: none;" class="mainDiv">
+      Color <br /><input type="color" id="drawColor" /><br />
+      Opacity <input type="range" id="drawWidth" /> 
+      Weight
+      <input type="range" id="drawAlpha" min="0" max="100" value="100" />
+      <br><br>
+      <div class="eraserDiv">
+        <img src="./images/eraser.png" width="12%">
+        Eraser
+        <input type="image" src="./images/off_button.png" id="eraserMode" value="ON" height="75%" width="35%" style="border-radius:6px;"/>
+      </div>
     </div>
     <script src="./scripts/popup.js"></script>
   </body>
